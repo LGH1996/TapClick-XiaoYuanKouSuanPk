@@ -1,7 +1,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="appName">TapClick</string>
-    <string name="accessibilityName">TapClick(支持坐标点击)</string>
-    <string name="accessibilityNameNoGesture">TapClick(不支持坐标点击)</string>
+    <string name="appName">TapClick-小袁口算PK</string>
+    <string name="accessibilityName">TapClick-小袁口算PK(支持坐标点击)</string>
+    <string name="accessibilityNameNoGesture">TapClick-小袁口算PK(不支持坐标点击)</string>
     <string name="addDataShort">创建规则</string>
     <string name="newRule">发现规则</string>
     <string name="description">

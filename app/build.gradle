@@ -6,8 +6,8 @@ android {
         applicationId "com.lgh.tapclick"
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 100
-        versionName "10.0"
+        versionCode 102
+        versionName "10.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -79,4 +79,5 @@ dependencies {
     implementation 'me.codeboy.android:align-text-view:2.3.2'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-codec:commons-codec:1.16.0'
+    implementation 'io.apisense:rhino-android:1.2.0'
 }

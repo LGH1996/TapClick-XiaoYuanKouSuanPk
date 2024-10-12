@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -79,6 +80,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * adb shell pm grant com.lgh.advertising.going android.permission.WRITE_SECURE_SETTINGS
@@ -134,6 +139,7 @@ public class MainFunction {
     private View ignoreView;
     private WindowManager.LayoutParams dbClickLp;
     private View dbClickView;
+    private DisplayMetrics displayMetrics;
 
     public MainFunction(AccessibilityService accessibilityService) {
         service = accessibilityService;
@@ -153,6 +159,8 @@ public class MainFunction {
         dataDao = MyApplication.dataDao;
         currentPackage = "Initialize CurrentPackage";
         currentActivity = "Initialize CurrentActivity";
+        displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
     }
 
     protected void onServiceConnected() {
@@ -201,6 +209,105 @@ public class MainFunction {
                 executorService.schedule(this, 5000, TimeUnit.MILLISECONDS);
             }
         }, 0, TimeUnit.MILLISECONDS);*/
+    }
+
+    public List<Path> getPathByStr(String numStr) {
+        float x = 100;
+        float y = ((float) displayMetrics.heightPixels / 4) * 3;
+        List<Path> list = new ArrayList<>();
+        for (int n = 0; n < numStr.length(); n++) {
+            String charStr = numStr.substring(n, n + 1);
+            Path path = getPathByChar(charStr, x + 150 * n + 100 * n, y);
+            list.add(path);
+        }
+        return list;
+    }
+
+    public Path getPathByChar(String charStr, float x, float y) {
+        float width = 150;
+        float height = 250;
+        if (TextUtils.equals(charStr, "0")) {
+            Path path1 = new Path();
+            path1.moveTo(x, y);
+            path1.lineTo(x + width, y);
+            path1.lineTo(x + width, y + height);
+            path1.lineTo(x, y + height);
+            path1.lineTo(x, y);
+            path1.close();
+            return path1;
+        } else if (TextUtils.equals(charStr, "1")) {
+            Path path1 = new Path();
+            path1.moveTo(x + width / 2, y);
+            path1.lineTo(x + width / 2, y + height);
+            return path1;
+        } else if (TextUtils.equals(charStr, "2")) {
+            Path path1 = new Path();
+            path1.moveTo(x, y);
+            path1.lineTo(x + width, y);
+            path1.lineTo(x, y + height);
+            path1.lineTo(x + width, y + height);
+            return path1;
+        } else if (TextUtils.equals(charStr, "3")) {
+            Path path1 = new Path();
+            path1.moveTo(x, y);
+            path1.lineTo(x + width, y + height / 4);
+            path1.lineTo(x, y + height / 2);
+            path1.lineTo(x + width, y + (height / 4) * 3);
+            path1.lineTo(x, y + height);
+            return path1;
+        } else if (TextUtils.equals(charStr, "4")) {
+            Path path1 = new Path();
+            path1.moveTo(x + width, y + height / 2);
+            path1.lineTo(x, y + height / 2);
+            path1.lineTo(x + width / 2, y);
+            path1.lineTo(x + width / 2, y + height + 50);
+            return path1;
+        } else if (TextUtils.equals(charStr, "5")) {
+            Path path1 = new Path();
+            path1.moveTo(x + width, y);
+            path1.lineTo(x, y);
+            path1.lineTo(x, y + height / 2);
+            path1.lineTo(x + width, y + height / 2);
+            path1.lineTo(x, y + height);
+            return path1;
+        } else if (TextUtils.equals(charStr, "6")) {
+            Path path1 = new Path();
+            path1.moveTo(x + width / 2, y);
+            path1.lineTo(x, y + height / 2);
+            path1.lineTo(x, y + height);
+            path1.lineTo(x + width, y + (height / 4) * 3);
+            path1.lineTo(x, y + height / 2);
+            return path1;
+        } else if (TextUtils.equals(charStr, "7")) {
+            Path path1 = new Path();
+            path1.moveTo(x, y);
+            path1.lineTo(x + width, y);
+            path1.lineTo(x + width, y + height);
+            return path1;
+        } else if (TextUtils.equals(charStr, "8")) {
+            Path path1 = new Path();
+            path1.moveTo(x, y);
+            path1.lineTo(x + width, y);
+            path1.lineTo(x, y + height);
+            path1.lineTo(x + width, y + height);
+            path1.lineTo(x, y);
+            path1.close();
+            return path1;
+        } else if (TextUtils.equals(charStr, "9")) {
+            Path path1 = new Path();
+            path1.moveTo(x + width, y + height / 2);
+            path1.lineTo(x, y + height / 4);
+            path1.lineTo(x + width, y);
+            path1.lineTo(x + width, y + height + 50);
+            return path1;
+        } else if (TextUtils.equals(charStr, ".")) {
+            Path path1 = new Path();
+            path1.moveTo(x + width / 2 - 2, y + height);
+            path1.lineTo(x + width / 2 + 2, y + height);
+            return path1;
+        } else {
+            throw new RuntimeException("非法字符");
+        }
     }
 
     @SuppressLint("SwitchIntDef")
@@ -254,7 +361,7 @@ public class MainFunction {
                     onOffCoordinateSub = false;
                     widgetSetMap = appDescribe.widgetSetMap;
                     coordinateMap = appDescribe.coordinateMap;
-                    onOffWidget = appDescribe.widgetOnOff && !widgetSetMap.isEmpty();
+                    onOffWidget = (appDescribe.widgetOnOff && !widgetSetMap.isEmpty()) || TextUtils.equals(currentPackage, "com.fenbi.android.leo");
                     onOffCoordinate = appDescribe.coordinateOnOff && !coordinateMap.isEmpty();
 
                     if (onOffWidget && !appDescribe.widgetRetrieveAllTime) {
@@ -300,7 +407,8 @@ public class MainFunction {
                     coordinate = coordinateMap != null ? coordinateMap.get(activityName) : null;
                     widgetSet = widgetSetMap != null ? widgetSetMap.get(activityName) : null;
                     onOffCoordinateSub = onOffCoordinate && coordinate != null;
-                    onOffWidgetSub = onOffWidget && widgetSet != null;
+                    onOffWidgetSub = (onOffWidget && widgetSet != null) || TextUtils.equals(currentActivity, "com.yuanfudao.android.leo.webview.ui.activity.SimpleWebAppFireworkActivity");
+                    preQuestion = null;
 
                     if (onOffWidgetSub) {
                         serviceInfo.eventTypes |= AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
@@ -343,6 +451,7 @@ public class MainFunction {
                         findAndClickView(nodeInfoList, widgetSet);
                     }
                 });
+                xiaoYuanKouSuan(root);
                 break;
             }
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED: {
@@ -362,9 +471,79 @@ public class MainFunction {
                         findAndClickView(Collections.singletonList(source), widgetSet);
                     }
                 });
+                xiaoYuanKouSuan(service.getRootInActiveWindow());
                 break;
             }
         }
+    }
+
+    private volatile String preQuestion;
+    static ScriptEngine jse = new ScriptEngineManager().getEngineByName("rhino");
+    private static final Pattern pattern = Pattern.compile("([0-9])\\1{4}");
+
+    private void xiaoYuanKouSuan(AccessibilityNodeInfo root) {
+        if (TextUtils.equals(currentPackage, "com.fenbi.android.leo")
+                && TextUtils.equals(currentActivity, "com.yuanfudao.android.leo.webview.ui.activity.SimpleWebAppFireworkActivity")) {
+            List<AccessibilityNodeInfo> nodeInfoList = findAllNode(List.of(root));
+            List<AccessibilityNodeInfo> list = findByText(nodeInfoList, ":");
+            if (list.isEmpty()) {
+                return;
+            }
+            list = findByText(nodeInfoList, "=");
+            if (list.isEmpty()) {
+                return;
+            }
+            for (AccessibilityNodeInfo nodeInfo : list) {
+                if (TextUtils.equals(nodeInfo.getParent().getViewIdResourceName(), "primary-question-wrap")
+                        || TextUtils.equals(nodeInfo.getParent().getParent().getViewIdResourceName(), "primary-question-wrap")) {
+                    String question = nodeInfo.getText().toString().replaceAll("\\s", "");
+                    if (TextUtils.equals(preQuestion, question)) {
+                        return;
+                    }
+                    preQuestion = question;
+                    try {
+                        String str = jse.eval(question.replaceAll("×", "*").replaceAll("÷", "/").replaceAll("=", "")).toString();
+                        if (str.endsWith(".0")) {
+                            str = str.replace(".0", "");
+                        } else {
+                            Matcher matcher = pattern.matcher(str);
+                            if (matcher.find()) {
+                                int roundNum = matcher.start() - str.indexOf(".") - 1;
+                                str = String.format("%." + roundNum + "f", Double.parseDouble(str));
+                            }
+                        }
+                        Log.i("LinGH", str);
+                        List<Path> paths = getPathByStr(str);
+                        GestureDescription.Builder builder = new GestureDescription.Builder();
+                        for (int i = 0; i < paths.size(); i++) {
+                            builder.addStroke(new GestureDescription.StrokeDescription(paths.get(i), 70L * i, 60));
+                        }
+                        service.dispatchGesture(builder.build(), new AccessibilityService.GestureResultCallback() {
+                            private final String str = preQuestion;
+
+                            @Override
+                            public void onCompleted(GestureDescription gestureDescription) {
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (TextUtils.equals(preQuestion, str)) {
+                                            preQuestion = null;
+                                        }
+                                    }
+                                }, 1000);
+                            }
+                        }, null);
+                    } catch (ScriptException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+            }
+        }
+    }
+
+    private List<AccessibilityNodeInfo> findByText(List<AccessibilityNodeInfo> nodeInfoList, String str) {
+        return nodeInfoList.stream().filter(e -> e.getText() != null && e.getText().toString().contains(str)).collect(Collectors.toList());
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
