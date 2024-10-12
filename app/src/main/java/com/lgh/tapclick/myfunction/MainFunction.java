@@ -209,23 +209,31 @@ public class MainFunction {
                 executorService.schedule(this, 5000, TimeUnit.MILLISECONDS);
             }
         }, 0, TimeUnit.MILLISECONDS);*/
+
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                xiaoYuanKouSuan(service.getRootInActiveWindow());
+//                handler.postDelayed(this, 100);
+//            }
+//        }, 100);
     }
 
     public List<Path> getPathByStr(String numStr) {
-        float x = 100;
-        float y = ((float) displayMetrics.heightPixels / 4) * 3;
+        float x = 200;
+        float y = ((float) displayMetrics.heightPixels / 5) * 3;
         List<Path> list = new ArrayList<>();
         for (int n = 0; n < numStr.length(); n++) {
             String charStr = numStr.substring(n, n + 1);
-            Path path = getPathByChar(charStr, x + 150 * n + 100 * n, y);
+            Path path = getPathByChar(charStr, x + 100 * n + 50 * n, y);
             list.add(path);
         }
         return list;
     }
 
     public Path getPathByChar(String charStr, float x, float y) {
-        float width = 150;
-        float height = 250;
+        float width = 100;
+        float height = 150;
         if (TextUtils.equals(charStr, "0")) {
             Path path1 = new Path();
             path1.moveTo(x, y);
@@ -482,9 +490,12 @@ public class MainFunction {
     private static final Pattern pattern = Pattern.compile("([0-9])\\1{4}");
 
     private void xiaoYuanKouSuan(AccessibilityNodeInfo root) {
+        if (root == null) {
+            return;
+        }
         if (TextUtils.equals(currentPackage, "com.fenbi.android.leo")
                 && TextUtils.equals(currentActivity, "com.yuanfudao.android.leo.webview.ui.activity.SimpleWebAppFireworkActivity")) {
-            List<AccessibilityNodeInfo> nodeInfoList = findAllNode(List.of(root));
+            List<AccessibilityNodeInfo> nodeInfoList = findAllNode(Collections.singletonList(root));
             List<AccessibilityNodeInfo> list = findByText(nodeInfoList, ":");
             if (list.isEmpty()) {
                 return;
@@ -494,8 +505,8 @@ public class MainFunction {
                 return;
             }
             for (AccessibilityNodeInfo nodeInfo : list) {
-                if (TextUtils.equals(nodeInfo.getParent().getViewIdResourceName(), "primary-question-wrap")
-                        || TextUtils.equals(nodeInfo.getParent().getParent().getViewIdResourceName(), "primary-question-wrap")) {
+                if ((nodeInfo.getParent() != null && TextUtils.equals(nodeInfo.getParent().getViewIdResourceName(), "primary-question-wrap"))
+                        || (nodeInfo.getParent().getParent() != null && TextUtils.equals(nodeInfo.getParent().getParent().getViewIdResourceName(), "primary-question-wrap"))) {
                     String question = nodeInfo.getText().toString().replaceAll("\\s", "");
                     if (TextUtils.equals(preQuestion, question)) {
                         return;
@@ -516,7 +527,7 @@ public class MainFunction {
                         List<Path> paths = getPathByStr(str);
                         GestureDescription.Builder builder = new GestureDescription.Builder();
                         for (int i = 0; i < paths.size(); i++) {
-                            builder.addStroke(new GestureDescription.StrokeDescription(paths.get(i), 70L * i, 60));
+                            builder.addStroke(new GestureDescription.StrokeDescription(paths.get(i), 170L * i, 150));
                         }
                         service.dispatchGesture(builder.build(), new AccessibilityService.GestureResultCallback() {
                             private final String str = preQuestion;
@@ -529,6 +540,7 @@ public class MainFunction {
                                         if (TextUtils.equals(preQuestion, str)) {
                                             preQuestion = null;
                                         }
+                                        xiaoYuanKouSuan(service.getRootInActiveWindow());
                                     }
                                 }, 1000);
                             }

@@ -18,6 +18,8 @@ https://docs.qq.com/doc/DWXhWVmFodlJGRnhL
 
 #### Demo演示
 
+https://github.com/user-attachments/assets/1b6674ef-cf63-41da-bc07-668d9205aa47
+
 https://github.com/LGH1996/TapClick/assets/49404827/e79cc11d-7543-499d-a6cf-3b73c2f335b6
 
 https://github.com/LGH1996/TapClick/assets/49404827/4843d54e-a218-47b6-a897-ea29c7b01899
