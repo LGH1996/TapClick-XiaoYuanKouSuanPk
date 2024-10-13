@@ -527,7 +527,7 @@ public class MainFunction {
                         List<Path> paths = getPathByStr(str);
                         GestureDescription.Builder builder = new GestureDescription.Builder();
                         for (int i = 0; i < paths.size(); i++) {
-                            builder.addStroke(new GestureDescription.StrokeDescription(paths.get(i), 170L * i, 150));
+                            builder.addStroke(new GestureDescription.StrokeDescription(paths.get(i), 300L * i, 250));
                         }
                         service.dispatchGesture(builder.build(), new AccessibilityService.GestureResultCallback() {
                             private final String str = preQuestion;
