@@ -18,6 +18,10 @@ https://docs.qq.com/doc/DWXhWVmFodlJGRnhL
 
 #### Demo演示
 
+![战绩可查](https://github.com/LGH1996/TapClick-XiaoYuanKouSuanPk/blob/master/20241013141928.jpg "战绩可查截图")
+
+![战绩可查](https://github.com/LGH1996/TapClick-XiaoYuanKouSuanPk/blob/master/20241013141944.jpg "截图战绩可查")
+
 https://github.com/user-attachments/assets/1b6674ef-cf63-41da-bc07-668d9205aa47
 
 https://github.com/LGH1996/TapClick/assets/49404827/e79cc11d-7543-499d-a6cf-3b73c2f335b6
